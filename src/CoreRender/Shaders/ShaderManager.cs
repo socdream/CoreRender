@@ -42,12 +42,14 @@ namespace CoreRender.Shaders
             return program;
         }
 
-        public static Shader LoadShader(Shader shader)
+        public static T LoadShader<T>() where T:Shader, new()
         {
-            var cached = _shaderCache.Where(a => a.GetType() == shader.GetType()).FirstOrDefault();
+            var cached = _shaderCache.Where(a => a.GetType() == typeof(T)).FirstOrDefault();
 
             if (cached != null)
-                return cached;
+                return (T)cached;
+
+            var shader = new T();
 
             shader.VertexShader = CreateShader(shader.VertexSource, ShaderType.VertexShader);
             shader.FragmentShader = CreateShader(shader.FragmentSource, ShaderType.FragmentShader);

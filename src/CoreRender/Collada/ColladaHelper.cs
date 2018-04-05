@@ -85,7 +85,7 @@ namespace CoreRender.Collada
                         };
 
                         // set up shader
-                        var shader = Shaders.ShaderManager.LoadShader(new CoreRender.Shaders.SkinnedMeshShader());
+                        var shader = Shaders.ShaderManager.LoadShader<Shaders.SkinnedMeshShader>();
 
                         mesh.Shader = shader;
                         mesh.Transform = transform;
@@ -128,8 +128,8 @@ namespace CoreRender.Collada
 
                 // set up shader
                 var shader = mesh.VertexType == typeof(MeshHelper.PositionNormalVertex) ?
-                    Shaders.ShaderManager.LoadShader(new CoreRender.Shaders.MeshShader()):
-                    Shaders.ShaderManager.LoadShader(new CoreRender.Shaders.TexturedMeshShader());
+                    (Shaders.Shader)Shaders.ShaderManager.LoadShader<Shaders.MeshShader>():
+                    (Shaders.Shader)Shaders.ShaderManager.LoadShader<Shaders.TexturedMeshShader>();
 
                 mesh.Shader = shader;
                 mesh.Transform = transform;

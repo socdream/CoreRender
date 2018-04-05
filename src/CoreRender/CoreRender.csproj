@@ -19,10 +19,11 @@
   <ItemGroup>
     <PackageReference Include="JavierOltra.CoreCollada" Version="0.0.1" />
     <PackageReference Include="JavierOltra.CoreFBX" Version="0.0.1" />
-    <PackageReference Include="JavierOltra.CoreImaging" Version="0.0.1" />
+    <PackageReference Include="JavierOltra.CoreImaging" Version="0.0.2" />
     <PackageReference Include="JavierOltra.CoreMath" Version="0.0.3" />
     <PackageReference Include="OpenTK.NETCore" Version="1.1.2749.6433" />
     <PackageReference Include="SharpFontStandard" Version="4.0.1" />
+    <PackageReference Include="SkiaSharp" Version="1.60.0" />
   </ItemGroup>
 
 </Project>

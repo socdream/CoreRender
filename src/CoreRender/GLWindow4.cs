@@ -10,6 +10,16 @@ namespace CoreRender
     public class GLWindow4 : GameWindow
     {
         public Action Draw { get; set; }
+        public bool DepthTesting
+        {
+            set
+            {
+                if (value)
+                    GL.Enable(EnableCap.DepthTest);
+                else
+                    GL.Disable(EnableCap.DepthTest);
+            }
+        }
 
         public GLWindow4() : base()
         {

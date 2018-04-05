@@ -43,6 +43,16 @@ namespace CoreRender.Geometry
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        public struct PositionUV0Vertex
+        {
+            public float PosX { get; set; }
+            public float PosY { get; set; }
+            public float PosZ { get; set; }
+            public float UvX { get; set; }
+            public float UvY { get; set; }
+        }
+
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
         public struct PositionNormalUV0SkinVertex
         {
             public float PosX { get; set; }
@@ -554,6 +564,50 @@ namespace CoreRender.Geometry
             return result;
         }
 
+        public static GeometryData FromVertices(List<PositionUV0Vertex> vertices, List<int> indices)
+        {
+            var result = new GeometryData()
+            {
+                VertexCount = vertices.Count,
+                Indices = indices.ToArray()
+            };
+
+            using (var stream = new System.IO.MemoryStream())
+            using (var writer = new System.IO.BinaryWriter(stream))
+            {
+                for (int i = 0; i < vertices.Count; i++)
+                {
+                    writer.Write(vertices[i].PosX);
+                    writer.Write(vertices[i].PosY);
+                    writer.Write(vertices[i].PosZ);
+                    writer.Write(vertices[i].UvX);
+                    writer.Write(vertices[i].UvY);
+                }
+
+                result.Data = stream.ToArray();
+            }
+
+            // add vertex attribs
+            result.Attribs = new VertexAttrib[]
+            {
+                new VertexAttrib()
+                {
+                    Size = 3,
+                    Type = (int)OpenTK.Graphics.OpenGL4.VertexAttribPointerType.Float,
+                    Stride = 5 * sizeof(float),
+                    Offset = 0
+                },
+                new VertexAttrib()
+                {
+                    Size = 2,
+                    Type = (int)OpenTK.Graphics.OpenGL4.VertexAttribPointerType.Float,
+                    Stride = 5 * sizeof(float),
+                    Offset = 3 * sizeof(float)
+                }
+            };
+
+            return result;
+        }
         public static GeometryData FromVertices(List<PositionNormalUV0Vertex> vertices, List<int> indices)
         {
             var result = new GeometryData()

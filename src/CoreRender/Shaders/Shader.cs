@@ -12,5 +12,13 @@ namespace CoreRender.Shaders
         public int VertexShader { get; set; }
         public string FragmentSource { get; set; }
         public string VertexSource { get; set; }
+
+        protected void SetTexture(int texture, int uniformLocation)
+        {
+            OpenTK.Graphics.OpenGL4.GL.ActiveTexture(OpenTK.Graphics.OpenGL4.TextureUnit.Texture0);
+            OpenTK.Graphics.OpenGL4.GL.BindTexture(OpenTK.Graphics.OpenGL4.TextureTarget.Texture2D, texture);
+            
+            OpenTK.Graphics.OpenGL4.GL.Uniform1(uniformLocation, 0);
+        }
     }
 }
