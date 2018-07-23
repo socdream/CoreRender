@@ -564,6 +564,41 @@ namespace CoreRender.Geometry
             return result;
         }
 
+        public static GeometryData FromVertices(List<PositionVertex> vertices, List<int> indices)
+        {
+            var result = new GeometryData()
+            {
+                VertexCount = vertices.Count,
+                Indices = indices.ToArray()
+            };
+
+            using (var stream = new System.IO.MemoryStream())
+            using (var writer = new System.IO.BinaryWriter(stream))
+            {
+                for (int i = 0; i < vertices.Count; i++)
+                {
+                    writer.Write(vertices[i].PosX);
+                    writer.Write(vertices[i].PosY);
+                    writer.Write(vertices[i].PosZ);
+                }
+
+                result.Data = stream.ToArray();
+            }
+
+            // add vertex attribs
+            result.Attribs = new VertexAttrib[]
+            {
+                new VertexAttrib()
+                {
+                    Size = 3,
+                    Type = (int)OpenTK.Graphics.OpenGL4.VertexAttribPointerType.Float,
+                    Stride = 3 * sizeof(float),
+                    Offset = 0
+                }
+            };
+
+            return result;
+        }
         public static GeometryData FromVertices(List<PositionUV0Vertex> vertices, List<int> indices)
         {
             var result = new GeometryData()

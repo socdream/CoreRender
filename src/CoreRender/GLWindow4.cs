@@ -20,6 +20,16 @@ namespace CoreRender
                     GL.Disable(EnableCap.DepthTest);
             }
         }
+        /// <summary>
+        /// Enables writing on the depth buffer
+        /// </summary>
+        public bool DepthWrite
+        {
+            set
+            {
+                GL.DepthMask(value);
+            }
+        }
 
         public GLWindow4() : base()
         {

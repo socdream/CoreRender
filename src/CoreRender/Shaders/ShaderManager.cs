@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CoreRender.Extensions;
 using OpenTK.Graphics.OpenGL4;
 
 namespace CoreRender.Shaders
@@ -97,11 +98,13 @@ namespace CoreRender.Shaders
                         GL.Uniform3(uniform.Location, 1, ((float[])uniform.Value));
                         break;
                     case 4:
-                        GL.Uniform3(uniform.Location, 1, ((float[])uniform.Value));
+                        GL.Uniform4(uniform.Location, 1, ((float[])uniform.Value));
                         break;
                     default:
                         break;
                 }
+            else if(uniform.Value is System.Drawing.Color)
+                GL.Uniform4(uniform.Location, 1, ((System.Drawing.Color)uniform.Value).ToFloatArray());
             else
                 throw new NotSupportedException("Datatype not supported.");
         }

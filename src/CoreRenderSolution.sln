@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.27004.2006
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoreRender", "CoreRender\CoreRender.csproj", "{0991903F-BAAC-4DBE-B006-3B8EE56034C2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreRender.Tests", "CoreRender.Tests\CoreRender.Tests.csproj", "{2E81EE66-F960-41B9-9FBD-1E5A3B7E4160}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoreRender.Tests", "CoreRender.Tests\CoreRender.Tests.csproj", "{2E81EE66-F960-41B9-9FBD-1E5A3B7E4160}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

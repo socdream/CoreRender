@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace CoreRender.Geometry
 {
-    public class Mesh
+    public class Mesh : IDisposable
     { 
         public string Name { get; set; }
 
@@ -20,8 +20,6 @@ namespace CoreRender.Geometry
         public int ElementBuffer { get; set; } = -1;
         public int ElementBufferSize { get; set; } = 0;
         public int Texture { get; set; } = 0;
-        public int UVBuffer { get; set; } = -1;
-        public int UVBufferSize { get; set; } = 0;
         public bool Enabled { get; set; } = true;
 
         public Type VertexType { get; set; } = typeof(MeshHelper.PositionNormalUV0Vertex);
@@ -333,5 +331,39 @@ namespace CoreRender.Geometry
                 GL.DrawElements(PrimitiveType, ElementBufferSize, DrawElementsType.UnsignedInt, 0);
             }
         }
+
+        #region IDisposable Support
+        private bool disposedValue = false; // To detect redundant calls
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    // dispose managed state (managed objects).
+                }
+
+                // free unmanaged resources (unmanaged objects) and override a finalizer below.
+                if (ElementBuffer != -1)
+                    GL.DeleteBuffer(ElementBuffer);
+
+                if (VertexArrayObject != -1)
+                    GL.DeleteVertexArray(VertexArrayObject);
+
+                if (Buffer != -1)
+                    GL.DeleteBuffer(Buffer);
+
+                disposedValue = true;
+            }
+        }
+        
+        // This code added to correctly implement the disposable pattern.
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(true);
+        }
+        #endregion
     }
 }

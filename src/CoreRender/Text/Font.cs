@@ -2,16 +2,17 @@
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
 
 namespace CoreRender.Text
 {
-    public class Font
+    public class Font : IDisposable
     {
         public static string FontsPath = System.IO.Path.Combine(Environment.CurrentDirectory, @"Resources\Fonts\");
-        public static string CharSheet = "abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ1234567890¡!@#$%^&*()-=_+[]{}\\|;:'\".,<>/¿?`~ ";
+        public static string CharSheet = "abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ1234567890¡!@#$%^&*()-=_+[]{}\\|;:'\".,<>/¿?`~· ";
 
         public static int CharSheetTexture { get; set; }
 
@@ -20,7 +21,6 @@ namespace CoreRender.Text
         public List<Mesh> Meshes { get; set; } = new List<Mesh>();
         public Shaders.TextShader Shader { get; set; } = Shaders.ShaderManager.LoadShader<Shaders.TextShader>();
         public Mesh FontMesh { get; set; }
-       
 
         public Font(int screenWidth, int screenHeight)
         {
@@ -30,7 +30,7 @@ namespace CoreRender.Text
             var path = $"{FontsPath}{media}.png";
 
             if (!File.Exists(path))
-                CreateFont(screenWidth);
+                CreateFontAtlasTexture(screenWidth);
 
             var png = new CoreImaging.PNG.PngImage(path);
             
@@ -164,9 +164,7 @@ namespace CoreRender.Text
             var offset = 0;
 
             foreach (var c in text)
-            {
                 offset += Draw(c, x + offset, y, size, screenWidth, screenHeight);
-            }
         }
 
         private int Draw(char value, float x, float y, Size size, int screenWidth, int screenHeight)
@@ -186,6 +184,25 @@ namespace CoreRender.Text
             Meshes[index].Draw();
 
             return Characters[index].Width;
+        }
+
+        public PointF GetTextSize(string text, Size size)
+        {
+            var width = 0f;
+            var height = 0f;
+
+            foreach (var c in text)
+            {
+                var index = Characters.TakeWhile(a => a.Name != c || a.Size != size).Count();
+
+                if (index == Characters.Count)
+                    continue;
+
+                width += Characters[index].Width;
+                height = Characters[index].Height;
+            }
+
+            return new PointF(width, height);
         }
 
         public static List<Character> GetCharacters(List<SKPaint> paints)
@@ -250,7 +267,7 @@ namespace CoreRender.Text
             };
         }
 
-        public static string CreateFont(int width)
+        public static string CreateFontAtlasTexture(int width)
         {
             var media = GetMediaSize(width);
             var paints = GetPaints(media);
@@ -324,7 +341,7 @@ namespace CoreRender.Text
             /// </summary>
             public Size Size { get; set; }
         }
-
+        
         public static int GetFontSize(Size size, MediaSize media)
         {
             switch (size)
@@ -415,5 +432,31 @@ namespace CoreRender.Text
             Medium,
             Large
         }
+
+        #region IDisposable Support
+        private bool disposedValue = false; // To detect redundant calls
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    // dispose managed state (managed objects).
+                    foreach (var item in Meshes)
+                        item.Dispose();
+                }
+                
+                disposedValue = true;
+            }
+        }
+        
+        // This code added to correctly implement the disposable pattern.
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(true);
+        }
+        #endregion
     }
 }

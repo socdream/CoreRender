@@ -14,15 +14,20 @@
     <PackageLicenseUrl>https://raw.githubusercontent.com/socdream/CoreRender/master/LICENSE.md</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/socdream/CoreRender</PackageProjectUrl>
     <Title>CoreRender</Title>
+    <Platforms>AnyCPU;x86</Platforms>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Audio\soloud_x86.dll" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="JavierOltra.CoreCollada" Version="0.0.1" />
     <PackageReference Include="JavierOltra.CoreFBX" Version="0.0.1" />
     <PackageReference Include="JavierOltra.CoreImaging" Version="0.0.2" />
     <PackageReference Include="JavierOltra.CoreMath" Version="0.0.3" />
+    <PackageReference Include="ManagedBass" Version="2.0.4" />
     <PackageReference Include="OpenTK.NETCore" Version="1.1.2749.6433" />
-    <PackageReference Include="SharpFontStandard" Version="4.0.1" />
     <PackageReference Include="SkiaSharp" Version="1.60.0" />
   </ItemGroup>
 

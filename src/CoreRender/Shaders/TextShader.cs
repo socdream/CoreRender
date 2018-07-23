@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 
 namespace CoreRender.Shaders
@@ -43,6 +44,24 @@ namespace CoreRender.Shaders
                 ShaderManager.SetUniform(this, _offset);
             }
         }
+        private Uniform _color = new Uniform()
+        {
+            Name = "fontcolor",
+            Value = System.Drawing.Color.White
+        };
+        public System.Drawing.Color Color
+        {
+            get
+            {
+                return (System.Drawing.Color)_color.Value;
+            }
+            set
+            {
+                _color.Value = value;
+
+                ShaderManager.SetUniform(this, _color);
+            }
+        }
 
         public TextShader()
         {
@@ -69,6 +88,7 @@ namespace CoreRender.Shaders
                     in vec2 vecUv;
 
                     uniform sampler2D diffuseTexture;
+                    uniform vec4 fontcolor = vec4(0, 0, 0, 0);
 
                     out vec4 color;
 
@@ -76,6 +96,7 @@ namespace CoreRender.Shaders
                     {
                         //color = vec4(1,0,0,1);
                         color = texture2D(diffuseTexture, vecUv.st);
+                        color = vec4(fontcolor.r, fontcolor.g, fontcolor.b, color.a);
                         //color = vec4(vecUv.x, vecUv.y, 0.0, 1.0);
                     }";
         }
