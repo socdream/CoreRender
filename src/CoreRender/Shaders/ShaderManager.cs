@@ -100,6 +100,12 @@ namespace CoreRender.Shaders
                     case 4:
                         GL.Uniform4(uniform.Location, 1, ((float[])uniform.Value));
                         break;
+                    case 9:
+                        GL.UniformMatrix3(uniform.Location, 1, false, ((float[])uniform.Value));
+                        break;
+                    case 16:
+                        GL.UniformMatrix4(uniform.Location, 1, false, ((float[])uniform.Value));
+                        break;
                     default:
                         break;
                 }

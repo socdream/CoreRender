@@ -225,9 +225,15 @@ namespace CoreRender.Geometry
 
             VertexArrayObject = GL.GenVertexArray();
 
+            if (VertexArrayObject == 0)
+                throw new Exception(GL.GetError().ToString());
+
             GL.BindVertexArray(VertexArrayObject);
 
             Buffer = GL.GenBuffer();
+
+            if (Buffer == 0)
+                throw new Exception(GL.GetError().ToString());
 
             GL.BindBuffer(BufferTarget.ArrayBuffer, Buffer);
             GL.BufferData(BufferTarget.ArrayBuffer, data.Data.Length, data.Data, BufferUsageHint.StaticDraw);

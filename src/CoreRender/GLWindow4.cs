@@ -20,6 +20,7 @@ namespace CoreRender
                     GL.Disable(EnableCap.DepthTest);
             }
         }
+
         /// <summary>
         /// Enables writing on the depth buffer
         /// </summary>
@@ -30,6 +31,16 @@ namespace CoreRender
                 GL.DepthMask(value);
             }
         }
+
+        //public bool StencilWrite
+        //{
+        //    set
+        //    {
+        //        GL.StencilFunc(StencilFunction.Always, 1, 0xff);
+        //        GL.StencilOp(StencilOp.Keep, StencilOp.Keep, StencilOp.Replace);
+        //        GL.StencilMask(0xff);
+        //    }
+        //}
 
         public GLWindow4() : base()
         {
@@ -58,6 +69,13 @@ namespace CoreRender
             Draw?.Invoke();
 
             SwapBuffers();
+        }
+
+        protected override void OnResize(EventArgs e)
+        {
+            base.OnResize(e);
+
+            GL.Viewport(ClientRectangle);
         }
 
         public int DemoTriangle()

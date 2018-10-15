@@ -21,6 +21,11 @@ namespace CoreRender.Text
         public List<Mesh> Meshes { get; set; } = new List<Mesh>();
         public Shaders.TextShader Shader { get; set; } = Shaders.ShaderManager.LoadShader<Shaders.TextShader>();
         public Mesh FontMesh { get; set; }
+        public Color Color
+        {
+            get => Shader.Color;
+            set => Shader.Color = value;
+        }
 
         public Font(int screenWidth, int screenHeight)
         {
