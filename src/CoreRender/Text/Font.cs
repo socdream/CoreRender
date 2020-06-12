@@ -163,16 +163,16 @@ namespace CoreRender.Text
             };
         }
 
-        public void Draw(string text, float x, float y, Size size, int screenWidth, int screenHeight)
+        public void Draw(string text, float x, float y, Size size, int screenWidth, int screenHeight, Camera camera)
         {
             Shader.Texture = Texture;
             var offset = 0;
 
             foreach (var c in text)
-                offset += Draw(c, x + offset, y, size, screenWidth, screenHeight);
+                offset += Draw(c, x + offset, y, size, screenWidth, screenHeight, camera);
         }
 
-        private int Draw(char value, float x, float y, Size size, int screenWidth, int screenHeight)
+        private int Draw(char value, float x, float y, Size size, int screenWidth, int screenHeight, Camera camera)
         {
             var index = Characters.TakeWhile(a => a.Name != value || a.Size != size).Count();
 
@@ -186,7 +186,7 @@ namespace CoreRender.Text
             Shader.Offset = new float[] { x, y };
 
             // Draw
-            Meshes[index].Draw();
+            Meshes[index].Draw(camera, null);
 
             return Characters[index].Width;
         }

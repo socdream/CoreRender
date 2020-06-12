@@ -1,0 +1,18 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace CoreRender.ConstrainedDelaunay
+{
+    /// <summary>
+    /// The winding of a set of points.
+    /// </summary>
+    public enum Winding
+    {
+        CW = 0,
+
+        CCW = 1,
+
+        Collinear = 2,
+    }
+}

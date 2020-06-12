@@ -163,12 +163,16 @@ namespace CoreRender.Shaders.Noise
                         // fractal noise (4 octaves)
                         uv *= 8.0;
                         mat2 m = mat2( 1.6,  1.2, -1.2,  1.6 );
-                        f  = 0.5000*noise( uv ); uv = m*uv;
-                        f += 0.2500*noise( uv ); uv = m*uv;
-                        f += 0.1250*noise( uv ); uv = m*uv;
-                        f += 0.0625*noise( uv ); uv = m*uv;
+                        f  = 0.5000*noise( uv ); 
+                        uv = m*uv;
+                        f += 0.2500*noise( uv ); 
+                        uv = m*uv;
+                        f += 0.1250*noise( uv ); 
+                        uv = m*uv;
+                        f += 0.0625*noise( uv ); 
+                        uv = m*uv;
 
-	                    f = 0.5 + 0.5*f;
+	                    f = 0.5 + 0.5 * f;
 
                         return f;
                     }
@@ -180,7 +184,7 @@ namespace CoreRender.Shaders.Noise
                         vec3 finalColor = (color1 * noise) + (color2 * (1.0f - noise));
 
                         vec3 diff = finalColor * max(dot(normalize(vecNormal), normalize(lightDir)), 0.0);
-                        color = vec4((diff + ambientLight).xyz, 1.0);
+                        color = vec4((diff + ambientLight.xyz).xyz, 1.0);
                         //color = vec4(vecUV, 0.0f, 1.0f);
                         //color = vec4(1.0f, 0f, 0f, 1.0f);
                     }";

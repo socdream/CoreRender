@@ -1,4 +1,5 @@
 ﻿using CoreMath;
+using CoreRender.Shaders;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
 using System;
@@ -14,6 +15,7 @@ namespace CoreRender.Geometry
         public string Name { get; set; }
 
         public int Buffer { get; set; } = -1;
+        public virtual int InstanceBuffer { get; set; } = -1;
         public int VertexCount { get; set; }
         public OpenTK.Graphics.OpenGL4.PrimitiveType PrimitiveType { get; set; } = PrimitiveType.Triangles;
         public int VertexArrayObject { get; set; } = 0;
@@ -38,7 +40,7 @@ namespace CoreRender.Geometry
         /// <summary>
         /// 3 scaling factors (x, y, z)
         /// </summary>
-        public float[] Scaling { get; set; } = new float[] { 1, 1, 1, };
+        public float[] Scaling { get; set; } = new float[] { 1, 1, 1 };
 
         public float[] Transform
         {
@@ -243,7 +245,7 @@ namespace CoreRender.Geometry
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, ElementBuffer);
             GL.BufferData(BufferTarget.ElementArrayBuffer, data.Indices.Length * 4, data.Indices, BufferUsageHint.StaticDraw);
 
-            MeshHelper.ApplyVertexAttribs(data.Attribs);
+            MeshHelper.ApplyVertexAttribs(data.Attribs, InstanceBuffer);
 
             ElementBufferSize = data.Indices.Length;
 
@@ -321,8 +323,17 @@ namespace CoreRender.Geometry
             return mesh;
         }
         
-        public void Draw()
+        public virtual void Draw(Camera camera, float[] parentTransform = null)
         {
+            ShaderManager.UseProgram(Shader.Program);
+
+            if (!(camera is null))
+            {
+                Shader.ViewMatrix = camera.ViewMatrix;
+                Shader.ProjectionMatrix = camera.ProjectionMatrix;
+                Shader.ModelMatrix = parentTransform is null ? Transform : Transform?.MatrixProduct(parentTransform);
+            }
+
             if (ElementBuffer == -1)
             {
                 GL.BindBuffer(BufferTarget.ArrayBuffer, Buffer);

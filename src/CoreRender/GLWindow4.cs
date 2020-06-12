@@ -9,7 +9,7 @@ namespace CoreRender
 {
     public class GLWindow4 : GameWindow
     {
-        public Action Draw { get; set; }
+        public event EventHandler<FrameEventArgs> DrawScene;
         public bool DepthTesting
         {
             set
@@ -18,6 +18,19 @@ namespace CoreRender
                     GL.Enable(EnableCap.DepthTest);
                 else
                     GL.Disable(EnableCap.DepthTest);
+            }
+        }
+
+        public void EnableBlend(bool enable)
+        {
+            if(enable)
+            {
+                GL.Enable(EnableCap.Blend);
+                GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);//BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+            }
+            else
+            {
+                GL.Disable(EnableCap.Blend);
             }
         }
 
@@ -56,17 +69,19 @@ namespace CoreRender
 
             // transparency
             GL.Enable(EnableCap.Blend);
-            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+            GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);//BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
 
             // antialiasing
             GL.Enable(EnableCap.PolygonSmooth);
+
+            GL.DepthFunc(DepthFunction.Lequal);
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-            Draw?.Invoke();
+            DrawScene?.Invoke(this, e);
 
             SwapBuffers();
         }
@@ -76,32 +91,6 @@ namespace CoreRender
             base.OnResize(e);
 
             GL.Viewport(ClientRectangle);
-        }
-
-        public int DemoTriangle()
-        {
-            var vertices = new float[]
-            {
-                0.0f, 0.5f, 0.0f,
-                -0.5f, -0.5f, 0.0f,
-                0.5f, -0.5f, 0.0f
-            };
-
-            //int vao = GL.GenVertexArray();
-
-            //GL.BindVertexArray(vao);
-
-            int buffer = LoadGeometry(vertices);
-            
-            Draw = () =>
-            {
-                //GL.BindVertexArray(vao);
-                GL.PointSize(5f);
-                GL.DrawArrays(PrimitiveType.Points, 0, 3);
-                GL.BindVertexArray(0);
-            };
-
-            return buffer;
         }
         
         public int LoadGeometry(float[] vertices)

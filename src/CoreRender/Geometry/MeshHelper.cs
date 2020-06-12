@@ -43,6 +43,96 @@ namespace CoreRender.Geometry
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        public class PositionColorVertex
+        {
+            public float PosX { get; set; }
+            public float PosY { get; set; }
+            public float PosZ { get; set; }
+            public float R { get; set; }
+            public float G { get; set; }
+            public float B { get; set; }
+            public float A { get; set; }
+
+            public static VertexAttrib[] VertexAttribs = new MeshHelper.VertexAttrib[]
+            {
+                new VertexAttrib()
+                {
+                    Size = 3,
+                    Type = (int)OpenTK.Graphics.OpenGL4.VertexAttribPointerType.Float,
+                    Stride = 7 * sizeof(float),
+                    Offset = 0
+                },
+                new VertexAttrib()
+                {
+                    Size = 4,
+                    Type = (int)OpenTK.Graphics.OpenGL4.VertexAttribPointerType.Float,
+                    Stride = 7 * sizeof(float),
+                    Offset = 3 * sizeof(float)
+                }
+            };
+        }
+        public class PositionColorInstancedVertex
+        {
+            public float PosX { get; set; }
+            public float PosY { get; set; }
+            public float PosZ { get; set; }
+            public float R { get; set; }
+            public float G { get; set; }
+            public float B { get; set; }
+            public float A { get; set; }
+
+            public static VertexAttrib[] VertexAttribs = new MeshHelper.VertexAttrib[]
+            {
+                new VertexAttrib()
+                {
+                    Size = 3,
+                    Type = (int)OpenTK.Graphics.OpenGL4.VertexAttribPointerType.Float,
+                    Stride = 7 * sizeof(float),
+                    Offset = 0
+                },
+                new VertexAttrib()
+                {
+                    Size = 4,
+                    Type = (int)OpenTK.Graphics.OpenGL4.VertexAttribPointerType.Float,
+                    Stride = 7 * sizeof(float),
+                    Offset = 3 * sizeof(float)
+                },
+                new VertexAttrib()
+                {
+                    Size = 4,
+                    Type = (int)OpenTK.Graphics.OpenGL4.VertexAttribPointerType.Float,
+                    Stride = 16 * sizeof(float),
+                    Offset = 0,
+                    Divisor = 1
+                },
+                new VertexAttrib()
+                {
+                    Size = 4,
+                    Type = (int)OpenTK.Graphics.OpenGL4.VertexAttribPointerType.Float,
+                    Stride = 16 * sizeof(float),
+                    Offset = 4 * sizeof(float),
+                    Divisor = 1
+                },
+                new VertexAttrib()
+                {
+                    Size = 4,
+                    Type = (int)OpenTK.Graphics.OpenGL4.VertexAttribPointerType.Float,
+                    Stride = 16 * sizeof(float),
+                    Offset = 8 * sizeof(float),
+                    Divisor = 1
+                },
+                new VertexAttrib()
+                {
+                    Size = 4,
+                    Type = (int)OpenTK.Graphics.OpenGL4.VertexAttribPointerType.Float,
+                    Stride = 16 * sizeof(float),
+                    Offset = 12 * sizeof(float),
+                    Divisor = 1
+                }
+            };
+        }
+
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
         public struct PositionUV0Vertex
         {
             public float PosX { get; set; }
@@ -88,13 +178,17 @@ namespace CoreRender.Geometry
             /// Offset in bytes
             /// </summary>
             public int Offset { get; set; }
+            public int Divisor { get; set; }
         }
 
-        public static void ApplyVertexAttribs(VertexAttrib[] attribs)
+        public static void ApplyVertexAttribs(VertexAttrib[] attribs, int instanceBuffer = -1)
         {
             for (int i = 0; i < attribs.Length; i++)
             {
-                if(attribs[i].Type == (int)OpenTK.Graphics.OpenGL4.VertexAttribIntegerType.Int)
+                if (attribs[i].Divisor > 0)
+                    OpenTK.Graphics.OpenGL4.GL.BindBuffer(OpenTK.Graphics.OpenGL4.BufferTarget.ArrayBuffer, instanceBuffer);
+
+                if (attribs[i].Type == (int)OpenTK.Graphics.OpenGL4.VertexAttribIntegerType.Int)
                 {
                     OpenTK.Graphics.OpenGL4.GL.VertexAttribIPointer(i, attribs[i].Size, OpenTK.Graphics.OpenGL4.VertexAttribIntegerType.Int, attribs[i].Stride, IntPtr.Add(IntPtr.Zero, attribs[i].Offset));
                     OpenTK.Graphics.OpenGL4.GL.EnableVertexAttribArray(i);
@@ -104,6 +198,9 @@ namespace CoreRender.Geometry
                     OpenTK.Graphics.OpenGL4.GL.VertexAttribPointer(i, attribs[i].Size, (OpenTK.Graphics.OpenGL4.VertexAttribPointerType)attribs[i].Type, false, attribs[i].Stride, attribs[i].Offset);
                     OpenTK.Graphics.OpenGL4.GL.EnableVertexAttribArray(i);
                 }
+
+                if (attribs[i].Divisor > 0)
+                    OpenTK.Graphics.OpenGL4.GL.VertexAttribDivisor(i, attribs[i].Divisor);
             }
         }
 

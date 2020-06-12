@@ -16,5 +16,7 @@ namespace CoreRender.Extensions
                 color.A/255f
             };
         }
+
+        public static System.Drawing.Color ToColor(this float[] value) => System.Drawing.Color.FromArgb((int)(255f * value[3]), (int)(255f * value[0]), (int)(255f * value[1]), (int)(255f * value[2]));
     }
 }

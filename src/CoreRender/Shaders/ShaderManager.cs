@@ -11,6 +11,15 @@ namespace CoreRender.Shaders
     {
         private static List<Shader> _shaderCache = new List<Shader>();
 
+        private static int _currentProgram = -1;
+        public static void UseProgram(int program)
+        {
+            if (program != _currentProgram)
+                GL.UseProgram(program);
+
+            _currentProgram = program;
+        }
+
         private static int CreateShader(string fsShader, ShaderType foType)
         {
             int id = GL.CreateShader(foType);
